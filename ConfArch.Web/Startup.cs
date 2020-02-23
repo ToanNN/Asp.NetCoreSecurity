@@ -23,7 +23,7 @@ namespace ConfArch.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews(o => o.Filters.Add(new AuthorizeFilter()));
+            services.AddControllersWithViews(options=> options.Filters.Add( new AuthorizeFilter()));
             services.AddScoped<IConferenceRepository, ConferenceRepository>();
             services.AddScoped<IProposalRepository, ProposalRepository>();
             services.AddScoped<IAttendeeRepository, AttendeeRepository>();
@@ -35,7 +35,12 @@ namespace ConfArch.Web
 
             //1. Add service to to authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie();
+                .AddCookie()
+                .AddGoogle(option =>
+                {
+                    option.ClientId = Configuration["Google:ClientId"];
+                    option.ClientSecret = Configuration["Google:ClientSecret"];
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -55,7 +60,8 @@ namespace ConfArch.Web
 
             app.UseRouting();
 
-            
+            //requires users to authenticate
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

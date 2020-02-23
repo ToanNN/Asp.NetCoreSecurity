@@ -33,7 +33,9 @@ namespace ConfArch.Web.Controllers
         {
             var user = userRepository.GetByUsernameAndPassword(model.Username, model.Password);
             if (user == null)
+            {
                 return Unauthorized();
+            }
 
             var claims = new List<Claim>
             {
@@ -43,15 +45,10 @@ namespace ConfArch.Web.Controllers
                 new Claim("FavoriteColor", user.FavoriteColor)
             };
 
-            var identity = new ClaimsIdentity(claims,
-                CookieAuthenticationDefaults.AuthenticationScheme);
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                principal,
-                new AuthenticationProperties { IsPersistent = model.RememberLogin });
-
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, new AuthenticationProperties { IsPersistent = model.RememberLogin });
             return LocalRedirect(model.ReturnUrl);
         }
 

@@ -17,17 +17,16 @@
         <div class="col-md-6 titlecol">
             <span class="title">@ViewBag.Title</span>           
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 titlecol">
             @if (User.Identity.IsAuthenticated)
             {
-                <h3>Hi @User.Identity.Name!</h3>
+                <h3> Hi @User.Identity.Name</h3>
                 <a asp-controller="Account" asp-action="Logout" class="btn btn-primary">Logout</a>
             }
             else
             {
-                <h3>Login here: </h3>
+                <h3>Login here:</h3>
                 <a asp-controller="Account" asp-action="Login" class="btn btn-primary">Login</a>
-       
             }
         </div>
     </div>
