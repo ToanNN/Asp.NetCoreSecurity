@@ -34,10 +34,17 @@ namespace ConfArch.Web
                     assembly => assembly.MigrationsAssembly(typeof(ConfArchDbContext).Assembly.FullName)));
 
             //1. Add service to to authentication
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    //options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                })
                 .AddCookie()
+                //Add third party authentications
+                .AddCookie(ExternalAuthenticationDefaults.AuthenticationScheme)
                 .AddGoogle(option =>
                 {
+                    option.SignInScheme = ExternalAuthenticationDefaults.AuthenticationScheme;
                     option.ClientId = Configuration["Google:ClientId"];
                     option.ClientSecret = Configuration["Google:ClientSecret"];
                 });

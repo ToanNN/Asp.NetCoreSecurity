@@ -57,6 +57,7 @@ namespace ConfArch.Web.Controllers
         {
             var props = new AuthenticationProperties
             {
+                // This is the method to be called back when Google authenticates a user
                 RedirectUri = Url.Action("GoogleLoginCallback"),
                 Items =
                 {
@@ -97,8 +98,8 @@ namespace ConfArch.Web.Controllers
             await HttpContext.SignOutAsync(
                 ExternalAuthenticationDefaults.AuthenticationScheme);
 
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            // sign in with cookies authentication
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return LocalRedirect(result.Properties.Items["returnUrl"]);
         }
